@@ -1,8 +1,8 @@
-import webscrape
-import rulebasedmodel
-import searchtext
-import textpreprocessing
-import weather
+from webscrape import WebScraping
+from rulebasedmodel import RuleBasedModel
+from searchtext import SearchText
+from textpreprocessing import TextPreprocessing
+from weather import Weather
 
 
 class Main:
