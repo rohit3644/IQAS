@@ -1,8 +1,39 @@
+from __future__ import unicode_literals, print_function
 from webscrape import WebScraping
 from rulebasedmodel import RuleBasedModel
 from searchtext import SearchText
 from textpreprocessing import TextPreprocessing
 from weather import Weather
+
+import numpy as np
+import string
+import re
+import codecs
+import wikipedia
+import wikipediaapi
+import datetime
+import spacy
+import en_core_web_lg
+import requests
+import urllib.request
+import json
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from bs4 import BeautifulSoup
+from bs4.element import Comment
+import urllib.parse as urlparse
+from googlesearch import search
+
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from spacy.lang.en import English
+
+nlp = en_core_web_lg.load()
+ps = PorterStemmer()
+
+# Disable displaying SSL verification warnings
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class Main:
