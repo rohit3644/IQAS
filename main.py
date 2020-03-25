@@ -44,7 +44,7 @@ class Main:
         query_ner = nlp(query)
         weather_location = ""
         # if any keyword is present in query
-        if "Weather" in query or "Temperature" in query or "Humidity" in query or "Pressure" in query:
+        if "Weather" in query or "Temperature" in query or "Humidity" in query or "Pressure" in query or "Climate" in query:
             for i in query_ner.ents:
                 if(i.label_ == 'GPE'):
                     weather_location = i.text

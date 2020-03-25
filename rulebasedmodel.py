@@ -15,7 +15,7 @@ class RuleBasedModel:
                 print("Answer: ", search_text)
             else:
                 for i in search_text_ner.ents:
-                    if(i.label_ == 'PERSON' or i.label_ == "ORG" and i.text not in answer_array):
+                    if(i.label_ == 'PERSON' or i.label_ == "ORG" or i.label_ == "GPE" and i.text not in answer_array):
                         answer_array.append(i.text)
                 if(len(answer_array) == 1):
                     print("Answer: ", *answer_array)
@@ -55,6 +55,6 @@ class RuleBasedModel:
         elif(ques_tag not in list_ques_tag):
             print("Answer: ", search_text)
 
-        print("\nNot what you are looking for, check these links to know more: ")
+        print("\nNot what you are looking for, try re-framing your question or check these links to know more: ")
         for i in links:
             print(i, end="\n")

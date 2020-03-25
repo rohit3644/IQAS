@@ -137,7 +137,7 @@ class SearchText:
         for i in range(length):
             count = 0
             for j in keywords_array:
-                if(j.lower() in string_array[i] or j in string_array[i] or j.upper() in string_array[i]):
+                if(j.lower() in string_array[i] or j in string_array[i] or j.upper() in string_array[i] or ps.stem(j) in string_array[i]):
                     count += 1
             dic.__setitem__(i, count)
 
