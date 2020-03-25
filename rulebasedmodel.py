@@ -18,7 +18,7 @@ class RuleBasedModel:
                     if(i.label_ == 'PERSON' or i.label_ == "ORG" and i.text not in answer_array):
                         answer_array.append(i.text)
                 if(len(answer_array) == 1):
-                    print("Answer: ", answer_array)
+                    print("Answer: ", *answer_array)
                 else:
                     print("Answer: ", search_text)
 

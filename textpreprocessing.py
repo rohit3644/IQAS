@@ -1,3 +1,12 @@
+import string
+import re
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from spacy.lang.en import English
+
+
 class TextPreprocessing:
     def __init__(self):
         pass
@@ -18,7 +27,6 @@ class TextPreprocessing:
     def stop_word(self, query):
         # Punctuation removal
         query = query.translate(str.maketrans('', '', string.punctuation))
-
         # Wh-question removal
         query_array = query.split()
         reg = re.findall(

@@ -1,3 +1,22 @@
+import numpy as np
+import wikipedia
+import wikipediaapi
+import datetime
+import spacy
+import requests
+import urllib.request
+import json
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from bs4 import BeautifulSoup
+from bs4.element import Comment
+import urllib.parse as urlparse
+from googlesearch import search
+
+
+# Disable displaying SSL verification warnings
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
 class WebScraping:
     def __init__(self):
         pass
@@ -43,8 +62,8 @@ class WebScraping:
             results = search(
                 query, lang='en',
                 start=0, stop=num_results,
-                pause=get_random_delay(),
-                user_agent=get_random_ua()
+                pause=self.get_random_delay(),
+                user_agent=self.get_random_ua()
             )
         except Exception:
             pass
@@ -81,7 +100,7 @@ class WebScraping:
     def get_all_wikis(self, wiki_links):
         wiki_contents = []
         for url in wiki_links:
-            wiki_info = get_wiki_info(url)
+            wiki_info = self.get_wiki_info(url)
             if wiki_info:
                 wiki_contents.append(wiki_info)
         return wiki_contents
@@ -90,7 +109,7 @@ class WebScraping:
 
     def download_site(self, url, session):
         html_page = ""
-        user_agent = get_random_ua()
+        user_agent = self.get_random_ua()
         headers = {
             'user-agent': user_agent,
         }
@@ -112,7 +131,7 @@ class WebScraping:
         site_contents = []
         with requests.Session() as session:
             for url in sites:
-                html_page = download_site(url, session)
+                html_page = self.download_site(url, session)
                 if html_page:
                     site_contents.append(html_page)
         return site_contents
@@ -135,12 +154,12 @@ class WebScraping:
         if len(children) == 0:
             return False
         for child in children:
-            filterTags(child, res)
+            self.filterTags(child, res)
 
     def text_from_html(self, htmlContent, res):
         soup = BeautifulSoup(htmlContent, 'html.parser')
         texts = soup.find()
-        filterTags(texts, res)
+        self.filterTags(texts, res)
         return " ".join(t.strip() for t in res)
 
     # Extract textual content from all pages
@@ -149,7 +168,7 @@ class WebScraping:
         text_contents = []
         for html in extracted_site_contents:
             res = []
-            page_text = text_from_html(html, res)
+            page_text = self.text_from_html(html, res)
             if page_text is not None:
                 text_contents.append(page_text)
         return text_contents
@@ -161,7 +180,8 @@ class WebScraping:
         links = []
         wiki_links, other_sites = [], []
         # Search Google
-        sites = google_search(query, num_results=3)  # Obtain the top 3 URLs
+        sites = self.google_search(
+            query, num_results=3)  # Obtain the top 3 URLs
         # URL list generation and bifurcation
         for url in sites:  # Split the URLs into Wiki links and site links
             if "gstatic.com" in url:  # Exclude static google content
@@ -170,14 +190,15 @@ class WebScraping:
             target.append(url)
             links.append(url)
         # Fetching Wiki pages
-        wiki_pages = get_all_wikis(wiki_links)
+        wiki_pages = self.get_all_wikis(wiki_links)
         if wiki_pages:
             text_results += wiki_pages  # Merge wikis with text results
-            return (text_results, links)
         # Fetching site HTMLs and extracting text
-        site_pages = download_all_sites(other_sites)  # Get HTML from site URLs
+        site_pages = self.download_all_sites(
+            other_sites)  # Get HTML from site URLs
         if site_pages:  # Emptiness check
-            page_texts = extract_text(site_pages)  # Extract texts from HTML
+            page_texts = self.extract_text(
+                site_pages)  # Extract texts from HTML
             if page_texts:  # Emptiness check
                 text_results += page_texts  # Merge site texts with text results
         return (text_results, links)
