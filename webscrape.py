@@ -193,6 +193,7 @@ class WebScraping:
         wiki_pages = self.get_all_wikis(wiki_links)
         if wiki_pages:
             text_results += wiki_pages  # Merge wikis with text results
+            return (text_results, links)
         # Fetching site HTMLs and extracting text
         site_pages = self.download_all_sites(
             other_sites)  # Get HTML from site URLs
