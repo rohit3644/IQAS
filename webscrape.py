@@ -1,3 +1,4 @@
+# importing third-party libraries
 import numpy as np
 import wikipedia
 import wikipediaapi
@@ -11,12 +12,15 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import urllib.parse as urlparse
 from googlesearch import search
-
-
 # Disable displaying SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
+# WebScraping class contains a constructor, get_random_ua function,
+# get_random_delay function, google_search function, get_wiki_info function,
+# get_all_wikis function, download_site function, download_all_sites function,
+# filterTags function, text_from_html function, extract_text function
+# and fetch_text_result function
 class WebScraping:
     def __init__(self):
         pass
@@ -103,6 +107,7 @@ class WebScraping:
             wiki_info = self.get_wiki_info(url)
             if wiki_info:
                 wiki_contents.append(wiki_info)
+                break
         return wiki_contents
 
     # Helper function to download the html page of a site
@@ -142,8 +147,11 @@ class WebScraping:
                      'meta', 'title', 'aside', 'footer', 'svg', 'base', 'figure',
                      'form', 'nav', 'head', 'link', 'button', 'source', 'canvas',
                      'br', 'input', 'script', 'wbr', 'video', 'param', 'hr', 'a', 'h1']
+        # if the current tag is present
+        # in blacklist
         if element.name in blacklist:
             return False
+        # ignore the comments
         if isinstance(element, Comment):
             return False
 
