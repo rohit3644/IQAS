@@ -15,7 +15,8 @@ class Weather:
         # importing third-party libraries
         import requests
         import json
-        api_key = "908b376f6d89b431ba2ab4aa65ce6264"
+        from apikey import key
+        api_key = key
 
         # base_url variable to store url
         base_url = "http://api.openweathermap.org/data/2.5/weather?"
