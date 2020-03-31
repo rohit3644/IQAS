@@ -12,7 +12,7 @@ class RuleBasedModel:
     def rule_based_model(self, ques_tag, query_ner, search_text_ner, search_text, list_ques_tag, links):
         # list to store final answer
         answer_array = []
-
+        answer = ""
         # Case-1: if the query contains 'who' or 'whom' question tag
         if ((ques_tag == 'who' or ques_tag == 'Who' or ques_tag == 'whom' or ques_tag == 'Whom')):
             # if the query contains a person name
@@ -26,7 +26,7 @@ class RuleBasedModel:
             # sentences as answer
             # Eg, Who is Narendra Modi?
             if(person_flag == True):
-                print("Answer: ", search_text)
+                answer = search_text
 
             else:
                 for i in search_text_ner.ents:
@@ -35,9 +35,9 @@ class RuleBasedModel:
                 # if query contains only a single
                 # person, organization or gpe
                 if(len(answer_array) == 1):
-                    print("Answer: ", answer_array[0])
+                    answer = answer_array[0]
                 else:
-                    print("Answer: ", search_text)
+                    answer = search_text
 
         # Case-2: if the query contains 'when' question tag
         elif ((ques_tag == 'when' or ques_tag == 'When')):
@@ -48,9 +48,9 @@ class RuleBasedModel:
                     answer_array.append(i.text)
             # if query contains only a single date
             if(len(answer_array) == 1):
-                print("Answer: ", answer_array[0])
+                answer = answer_array[0]
             else:
-                print("Answer: ", search_text)
+                answer = search_text
 
         # Case-3: if the query contains 'where' question tag
         elif ((ques_tag == 'where' or ques_tag == 'Where')):
@@ -65,22 +65,24 @@ class RuleBasedModel:
             # if there is only a single
             # GPE in sentence
             if(len(answer_array) == 1):
-                print("Answer: ", answer_array[0])
+                answer = answer_array[0]
             else:
-                print("Answer: ", search_text)
+                answer = search_text
 
         # Case-4: if the query contains 'what' and 'which' question tag
         elif ((ques_tag == 'which' or ques_tag == 'Which' or ques_tag == 'What' or ques_tag == 'what')):
-            print("Answer: ", search_text)
+            answer = search_text
 
         # Case-5: if the query contains 'how' question tag
         elif(ques_tag == 'how' or ques_tag == "How"):
-            print("Answer: ", search_text)
+            answer = search_text
 
         # Case-6: default case
         elif(ques_tag not in list_ques_tag):
-            print("Answer: ", search_text)
+            answer = search_text
 
+        # Final answer
+        print("Answer: ", answer)
         # Printing the relevant links
         # along with the answer
         print("\nNot what you are looking for, try re-framing your question or check these links to know more: ")
