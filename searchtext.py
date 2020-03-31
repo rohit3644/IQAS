@@ -1,14 +1,7 @@
-# importing third-party libraries
-import spacy
-import en_core_web_lg
 import nltk
 from nltk.stem import PorterStemmer
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from spacy.lang.en import English
-nlp = en_core_web_lg.load()
 ps = PorterStemmer()
-
 # SearchText class contains a constructor and searching_text function,
 # sentence_split function and relevant sentence function
 # searching_text function is used to search relevant sentences
@@ -26,6 +19,12 @@ class SearchText:
     # used to search relevant text based on user query
     # returns a string of relevant sentences
     def searching_text(self, query, file_content, query_ner, ques_tag, list_ques_tag):
+        # importing third-party libraries
+        import spacy
+        import en_core_web_lg
+        from nltk.corpus import stopwords
+        from nltk.tokenize import word_tokenize
+        nlp = en_core_web_lg.load()
         # Splitting the file content into sentences
         list_file_content = self.sentence_split(file_content)
         # final string of relevant sentences

@@ -1,10 +1,4 @@
-# importing third-party libraries
-import string
 import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from spacy.lang.en import English
 
 # TextPreprocessing class contains a constructor, question_tag function
 # and stop_word function, question_tag function detects the type of question
@@ -36,6 +30,12 @@ class TextPreprocessing:
     # capitalizing words in the user query
     # returns a refined query containing no stop words
     def stop_word(self, query):
+        # importing third-party libraries
+        import string
+        import nltk
+        from nltk.corpus import stopwords
+        from nltk.tokenize import word_tokenize
+        from spacy.lang.en import English
         # Punctuation removal
         query = query.translate(str.maketrans('', '', string.punctuation))
         # Wh-question removal

@@ -1,6 +1,3 @@
-# importing third-party libraries
-import requests
-import json
 
 # Weather class contains a constructor and weather function
 # weather function is used to get weather summary of a city
@@ -15,6 +12,9 @@ class Weather:
     # used to get weather summary of a city
     # using open weather api
     def weather(self, city_name):
+        # importing third-party libraries
+        import requests
+        import json
         api_key = "908b376f6d89b431ba2ab4aa65ce6264"
 
         # base_url variable to store url

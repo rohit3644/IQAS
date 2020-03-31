@@ -1,7 +1,5 @@
 # importing third-party libraries
-import numpy as np
-import wikipedia
-import wikipediaapi
+
 import datetime
 import spacy
 import requests
@@ -11,7 +9,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import urllib.parse as urlparse
-from googlesearch import search
+
 # Disable displaying SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -27,6 +25,8 @@ class WebScraping:
 
     # Utility function to pick a random user-agent
     def get_random_ua(self):
+        import numpy as np
+
         random_ua = None
         ua_file = 'ua_file.txt'
         try:
@@ -47,6 +47,8 @@ class WebScraping:
     # Utility function to pick a random delay
 
     def get_random_delay(self):
+        import numpy as np
+
         delay = 2.0
         try:
             random_num = np.random.uniform(2, 3)
@@ -59,6 +61,8 @@ class WebScraping:
     # Get top sites from google for a query
 
     def google_search(self, query, num_results=None):
+        from googlesearch import search
+
         def empty():  # Empty generator
             yield from ()
         results = empty()
@@ -77,6 +81,9 @@ class WebScraping:
     # Helper function to retrieve information directly from Wikipedia
 
     def get_wiki_info(self, wiki_url):
+        import wikipedia
+        import wikipediaapi
+        import urllib.parse as urlparse
         wiki_text = ""
         url_segments = wiki_url.rpartition('/')
         if "en.wikipedia.org" == url_segments[2]:

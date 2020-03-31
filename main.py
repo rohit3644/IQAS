@@ -1,16 +1,5 @@
 from __future__ import unicode_literals, print_function
 
-# importing all the classes
-from webscrape import WebScraping
-from rulebasedmodel import RuleBasedModel
-from searchtext import SearchText
-from textpreprocessing import TextPreprocessing
-from weather import Weather
-
-# importing the third- party libraries
-import spacy
-import en_core_web_lg
-nlp = en_core_web_lg.load()
 
 # Main class contains a constructor and main function
 # main function is used to take user query input,
@@ -27,6 +16,17 @@ class Main:
 
     # user-defined main function
     def main(self):
+        # importing all the classes
+        from webscrape import WebScraping
+        from rulebasedmodel import RuleBasedModel
+        from searchtext import SearchText
+        from textpreprocessing import TextPreprocessing
+        from weather import Weather
+
+        # importing the third- party libraries
+        import spacy
+        import en_core_web_lg
+        nlp = en_core_web_lg.load()
         # objects
         web_scrape_object = WebScraping()
         text_preprocess_object = TextPreprocessing()
