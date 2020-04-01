@@ -3,4 +3,3 @@ apikey.py
 dbcredentials.py
 .vscode/
 __pycache__/
-ua_file.txt
