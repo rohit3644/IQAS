@@ -35,8 +35,9 @@ TO RUN
 
 1. Install python 3.6 or above
 2. Install the packages specified above
-3. Open command prompt
-4. Go to the directory
-5. Type in command prompt "python3 main.py"
-6. Input your question
-7. Wait for the answer
+3. Keep the ua_file.txt in the same directory
+4. Open command prompt
+5. Go to the directory
+6. Type in command prompt "python3 main.py"
+7. Input your question
+8. Wait for the answer
