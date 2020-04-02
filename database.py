@@ -19,43 +19,42 @@ class Database:
 
     # Function to execute insert query
     def insert_query(self, param):
-        initial_result = self.select_query(param)
-        if(initial_result):
-            return("Question is already stored")
-        else:
+        # Check if the value is already present
+        initial_result = self.select_query(param["Value"])
+        if(initial_result == None):
+            # Prepared Statement
             query = """Insert into Answers(Value,Answer) values (%s,%s)"""
+            # Binding the value
             value = (param["Value"], param["Answer"])
+            # Executing the query
             self.cursor.execute(query, value)
+            # This is required to save changes
             self.mydb.commit()
-            result = self.cursor.rowcount
-            return(result)
 
     # Function to execute select query
-    def select_query(self, param):
+    def select_query(self, value):
+        # Prepared Statement
         query = """Select Answer from Answers where Value = %s"""
-        value = (param["Value"],)
-        self.cursor.execute(query, value)
+        # Bind value
+        param = (value,)
+        # Execute query
+        self.cursor.execute(query, param)
+        # Fetch the first result
         result = self.cursor.fetchone()
-        return(result[0])
+        return(result)
 
     # function to close connection
 
     def close_connection(self):
+        # Check if connection is present or not
         if self.mydb.is_connected():
             self.cursor.close()
             self.mydb.close()
 
-
-def main():
-    # database object
-    database_object = Database()
-    # parameter
-    param = {"Value": 4, "Answer": "Narendra Modi is the current prime minister"}
-    result = database_object.select_query(param)
-    # closing the connection
-    database_object.close_connection()
-    print(result)
-
-
-if __name__ == "__main__":
-    main()
+    def main(self, value, answer):
+        # parameter
+        param = {"Value": value, "Answer": answer}
+        # Calling insert query
+        self.insert_query(param)
+        # closing the connection
+        self.close_connection()

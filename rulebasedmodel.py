@@ -9,7 +9,7 @@ class RuleBasedModel:
         pass
 
     # user-defined rule_based_model function
-    def rule_based_model(self, ques_tag, query_ner, search_text_ner, search_text, list_ques_tag, links):
+    def rule_based_model(self, ques_tag, query_ner, search_text_ner, search_text, list_ques_tag, links, query):
         # list to store final answer
         answer_array = []
         answer = ""
@@ -81,10 +81,51 @@ class RuleBasedModel:
         elif(ques_tag not in list_ques_tag):
             answer = search_text
 
-        # Final answer
-        print("Answer: ", answer)
-        # Printing the relevant links
+        # Concating the relevant links
         # along with the answer
-        print("\nNot what you are looking for, try re-framing your question or check these links to know more: ")
+        answer += "\n\nNot what you are looking for, try re-framing your question or check these links to know more: "
         for i in links:
-            print(i, end="\n")
+            answer += "\n"+i
+        # calling the database caching function
+        self.database_caching(answer, query)
+
+    # this function is used to store the relevant answer
+    # in database according to the user feedback
+    def database_caching(self, answer, query):
+        # Answers of such query change frequently
+        # so no need to store such answers in database
+        # Eg-: What is the petrol price today in Bhubaneswar?
+        if "Today" in query or "Yesterday" in query or "Price" in query:
+            print(answer)
+        else:
+
+            # Importing Database class
+            from database import Database
+
+            feedback = ""
+            # Final Answer(including links)
+            print("Answer:", answer)
+            print("\n\nAre you Satisfied with the answer?\n ")
+            response = input("Press Y fo Yes and N for No:")
+            if response in ['Yes', 'yes', 'y', 'Y']:
+                feedback = "Thank you for your valuable feedback"
+                # Find the caching value from the keyword
+                value = self.caching_value(query)
+                database_object = Database()
+                # calling main function in Database class
+                database_object.main(value, answer)
+            elif response in ['No', 'no', 'n', 'N']:
+                feedback = "Please try reframing your query once if you are not satisfied"
+            print(feedback)
+
+    # this method is used to generate a
+    # unique caching value based on the
+    # user query
+
+    def caching_value(self, keyword):
+        keyword_list = keyword.split()
+        value = 0
+        for i in keyword_list:
+            for j in i:
+                value += ord(j)
+        return value
