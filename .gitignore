@@ -3,3 +3,4 @@ apikey.py
 dbcredentials.py
 .vscode/
 __pycache__/
+stanford-corenlp-full-2018-10-05/

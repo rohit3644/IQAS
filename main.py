@@ -51,7 +51,7 @@ class Main:
         # Checking if the value exist in the database
         result = database_object.select_query(value)
         if result != None:
-            print(result[0])
+            print("Answer: ", result[0])
         else:
             # text_list is a list of text from different websites
             # links is a list of website links
@@ -84,10 +84,15 @@ class Main:
                     # and returns only relevant sentence from the
                     # entire content
                     text = search_text_object.searching_text(
-                        query, i, query_ner, ques_tag, list_ques_tag) + "\n" + "\n"
+                        query, i, query_ner, ques_tag, list_ques_tag)
                     # check for duplication of search text
                     if(text not in search_text):
                         search_text += text
+
+                # Anaphora/Reference resolution
+                from anaphora import Anaphora
+                anaphora_object = Anaphora()
+                search_text = anaphora_object.main(search_text)
                 # relevant_ sentence function is used to find the sentences
                 # having highest density of keywords, it returns sentences
                 # having maximum keywords in them

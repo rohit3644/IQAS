@@ -105,7 +105,7 @@ class RuleBasedModel:
             feedback = ""
             # Final Answer(including links)
             print("Answer:", answer)
-            print("\n\nAre you Satisfied with the answer?\n ")
+            print("\n\nAre you satisfied with the answer?\n ")
             response = input("Press Y fo Yes and N for No:")
             if response in ['Yes', 'yes', 'y', 'Y']:
                 feedback = "Thank you for your valuable feedback"

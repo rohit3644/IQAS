@@ -194,11 +194,19 @@ class WebScraping:
         text_results = []
         links = []
         wiki_links, other_sites = [], []
+        sites1 = set()
         # Search Google
         sites = self.google_search(
             query, num_results=3)  # Obtain the top 3 URLs
+        for i in sites:
+            found = -100
+            found = i.find('?')
+            if(found != -1):
+                sites1.add(i[:found])
+            else:
+                sites1.add(i)
         # URL list generation and bifurcation
-        for url in sites:  # Split the URLs into Wiki links and site links
+        for url in sites1:  # Split the URLs into Wiki links and site links
             if "gstatic.com" in url:  # Exclude static google content
                 continue
             target = wiki_links if "en.wikipedia.org" in url else other_sites

@@ -15,6 +15,17 @@ class SearchText:
     def __init__(self):
         pass
 
+    def search_all_keyword(self, length, query_array, list_file_content, l, universal):
+        for i in range(length):
+            for k in query_array:
+                x = k.lower()
+                y = ps.stem(k)
+                if((k in list_file_content[i]) or (x in list_file_content[i]) or (y in list_file_content[i]) or
+                        (y.capitalize() in list_file_content[i])) and i not in l and list_file_content[i] not in universal:
+                    l.append(i)
+                    universal += list_file_content[i] + " "
+        return universal
+
     # user-defined searching_text function
     # used to search relevant text based on user query
     # returns a string of relevant sentences
@@ -27,69 +38,22 @@ class SearchText:
         nlp = en_core_web_lg.load()
         # Splitting the file content into sentences
         list_file_content = self.sentence_split(file_content)
+        length = len(list_file_content)
+        query_array = query.split()
+        l = []
         # final string of relevant sentences
         universal = ""
         # For who question type
         if ((ques_tag == 'who' or ques_tag == 'Who' or ques_tag == 'whom' or ques_tag == 'Whom')):
-            l = []
-            file_content1 = ""
-            l1 = ['current', 'ongoing', 'latest', 'today']
-            date = []
-            # this flag becomes true if there
-            # is a date in user query
-            date_flag = False
-            for i in query_ner.ents:
-                if(i.label_ == 'DATE'):
-                    date.append(i.text)
-                    date_flag = True
-            if(date_flag):
-                for i in date:
-                    for k in range(len(list_file_content)):
-                        if(i in list_file_content[k] and list_file_content[k] not in file_content1):
-                            # print("Found in text: ",i)
-                            file_content1 += list_file_content[k] + " "
-            # if no date is present in the user-query
-            # then look for words in l1 list
-            else:
-                for i in l1:
-                    for k in range(len(list_file_content)):
-                        if((i in list_file_content[k]) or (i.capitalize() in list_file_content[k]) and list_file_content[k] not in file_content1):
-                            file_content1 += list_file_content[k] + " "
-            k = 0
-            # if there is no sentence containing a date
-            # or keywords of l1 list
-            if(file_content1 == ""):
-                for i in query.split():
-                    for k in range(len(list_file_content)):
-                        x = i.lower()
-                        if ((i in list_file_content[k]) or (x in list_file_content[k]) or (ps.stem(i) in list_file_content[k]) or
-                                (ps.stem(x) in list_file_content[k])) and k not in l and list_file_content[k] not in universal:
-                            l.append(k)
-                            universal += list_file_content[k] + " "
-            else:
-                for i in query.split():
-                    for k in range(len(list_file_content)):
-                        x = i.lower()
-                        if ((i in list_file_content[k]) or (x in list_file_content[k])) and k not in l and list_file_content[k] not in universal:
-                            l.append(k)
-                            universal += list_file_content[k] + " "
+            universal = self.search_all_keyword(
+                length, query_array, list_file_content, l, universal)
 
-                list_file_content1 = self.sentence_split(file_content1)
-
-                for i in list_file_content1:
-                    if i not in universal:
-                        universal += i
-
-        # For when question tags
+            # For when question tags
         elif ((ques_tag == 'when' or ques_tag == 'When')):
-            l = []
             relevant_string = ""
-            # getting the relevant sentence based on keywords
-            for i in query.split():
-                for j in range(len(list_file_content)):
-                    if(((i in list_file_content[j]) or (i.lower() in list_file_content[j])) and j not in l and list_file_content[j] not in relevant_string):
-                        l.append(j)
-                        relevant_string += list_file_content[j] + " "
+            relevant_string = self.search_all_keyword(
+                length, query_array, list_file_content, l, relevant_string)
+
             relevant_string_array = self.sentence_split(relevant_string)
 
             for i in relevant_string_array:
@@ -102,14 +66,9 @@ class SearchText:
 
         # For where type of questions
         elif(ques_tag == 'where' or ques_tag == 'Where'):
-            l = []
             relevant_string = ""
-            # getting the relevant sentence based on keywords
-            for i in query.split():
-                for j in range(len(list_file_content)):
-                    if(((i in list_file_content[j]) or (i.lower() in list_file_content[j])) and j not in l and list_file_content[j] not in relevant_string):
-                        l.append(j)
-                        relevant_string += list_file_content[j] + " "
+            relevant_string = self.search_all_keyword(
+                length, query_array, list_file_content, l, relevant_string)
 
             relevant_string_array = self.sentence_split(relevant_string)
 
@@ -123,23 +82,14 @@ class SearchText:
 
         # For which and what type of question
         elif(ques_tag == 'which' or ques_tag == 'Which' or ques_tag == 'What' or ques_tag == 'what'):
-            l = []
-            # getting the relevant sentence based on keywords
-            for i in query.split():
-                for j in range(len(list_file_content)):
-                    if(((i in list_file_content[j]) or (i.lower() in list_file_content[j])) and j not in l and list_file_content[j] not in universal):
-                        l.append(j)
-                        universal += list_file_content[j] + " "
+            universal = self.search_all_keyword(
+                length, query_array, list_file_content, l, universal)
 
         # For how and default case
         elif(ques_tag == 'how' or ques_tag == "How" or ques_tag not in list_ques_tag):
-            l = []
-            # getting the relevant sentence based on keywords
-            for i in query.split():
-                for j in range(len(list_file_content)):
-                    if(((i in list_file_content[j]) or (i.lower() in list_file_content[j])) and j not in l and list_file_content[j] not in universal):
-                        l.append(j)
-                        universal += list_file_content[j] + " "
+            universal = self.search_all_keyword(
+                length, query_array, list_file_content, l, universal)
+
         return universal
 
     # user-defined sentence_split function
