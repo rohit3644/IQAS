@@ -43,6 +43,7 @@ class SearchText:
         from anaphora import Anaphora
         anaphora_object = Anaphora()
         file_content = anaphora_object.main(file_content)
+
         # Splitting the file content into sentences
         list_file_content = self.sentence_split(file_content)
         length = len(list_file_content)

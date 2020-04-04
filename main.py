@@ -36,16 +36,17 @@ class Main:
         rule_based_object = RuleBasedModel()
         database_object = Database()
         # user query
-        query = input("Ask me a Question: ")
+        original_query = input("Ask me a Question: ")
 
         # question tag function is used to find the question-tag
         # in the user query and it returns question-tag and list of
         # all possible question tags
-        ques_tag, list_ques_tag = text_preprocess_object.question_tag(query)
+        ques_tag, list_ques_tag = text_preprocess_object.question_tag(
+            original_query)
 
         # Stopword function is used to remove stop words
         # from user query and returns the refined query
-        query = text_preprocess_object.stop_word(query)
+        query = text_preprocess_object.stop_word(original_query)
         # Getting the cache value from the keyword
         value = rule_based_object.caching_value(query)
         # Checking if the value exist in the database
@@ -55,7 +56,8 @@ class Main:
         else:
             # text_list is a list of text from different websites
             # links is a list of website links
-            text_list, links = web_scrape_object.fetch_text_results(query)
+            text_list, links = web_scrape_object.fetch_text_results(
+                original_query)
 
             # if text_list is empty
             if not text_list:

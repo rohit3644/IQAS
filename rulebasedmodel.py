@@ -30,7 +30,7 @@ class RuleBasedModel:
 
             else:
                 for i in search_text_ner.ents:
-                    if(i.label_ == 'PERSON' or i.label_ == "ORG" or i.label_ == "GPE" and i.text not in answer_array):
+                    if(i.label_ == 'PERSON' and i.text not in answer_array):
                         answer_array.append(i.text)
                 # if query contains only a single
                 # person, organization or gpe
