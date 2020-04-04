@@ -15,6 +15,8 @@ class SearchText:
     def __init__(self):
         pass
 
+    # this function is used to search all the relevant sentence
+    # atleast a keyword in query
     def search_all_keyword(self, length, query_array, list_file_content, l, universal):
         for i in range(length):
             for k in query_array:
@@ -36,6 +38,11 @@ class SearchText:
         from nltk.corpus import stopwords
         from nltk.tokenize import word_tokenize
         nlp = en_core_web_lg.load()
+
+        # Anaphora/Reference resolution
+        from anaphora import Anaphora
+        anaphora_object = Anaphora()
+        file_content = anaphora_object.main(file_content)
         # Splitting the file content into sentences
         list_file_content = self.sentence_split(file_content)
         length = len(list_file_content)
@@ -45,10 +52,24 @@ class SearchText:
         universal = ""
         # For who question type
         if ((ques_tag == 'who' or ques_tag == 'Who' or ques_tag == 'whom' or ques_tag == 'Whom')):
-            universal = self.search_all_keyword(
-                length, query_array, list_file_content, l, universal)
+            relevant_string = ""
+            relevant_string = self.search_all_keyword(
+                length, query_array, list_file_content, l, relevant_string)
 
-            # For when question tags
+            relevant_string_array = self.sentence_split(relevant_string)
+
+            for i in relevant_string_array:
+                x = nlp(i)
+                for j in x.ents:
+                    # getting the sentences containing date or ordinal
+                    if(j.label_ == 'PERSON'):
+                        universal += i
+                        break
+
+            if universal == "":
+                universal = relevant_string
+
+        # For when question tags
         elif ((ques_tag == 'when' or ques_tag == 'When')):
             relevant_string = ""
             relevant_string = self.search_all_keyword(
@@ -60,9 +81,12 @@ class SearchText:
                 x = nlp(i)
                 for j in x.ents:
                     # getting the sentences containing date or ordinal
-                    if(j.label_ == 'DATE' or j.label_ == 'ORDINAL'):
+                    if(j.label_ == 'DATE'):
                         universal += i
                         break
+
+            if universal == "":
+                universal = relevant_string
 
         # For where type of questions
         elif(ques_tag == 'where' or ques_tag == 'Where'):
@@ -79,6 +103,8 @@ class SearchText:
                     if(j.label_ == 'GPE'):
                         universal += i
                         break
+            if universal == "":
+                universal = relevant_string
 
         # For which and what type of question
         elif(ques_tag == 'which' or ques_tag == 'Which' or ques_tag == 'What' or ques_tag == 'what'):

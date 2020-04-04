@@ -114,7 +114,6 @@ class WebScraping:
             wiki_info = self.get_wiki_info(url)
             if wiki_info:
                 wiki_contents.append(wiki_info)
-                break
         return wiki_contents
 
     # Helper function to download the html page of a site

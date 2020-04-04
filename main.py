@@ -89,10 +89,6 @@ class Main:
                     if(text not in search_text):
                         search_text += text
 
-                # Anaphora/Reference resolution
-                from anaphora import Anaphora
-                anaphora_object = Anaphora()
-                search_text = anaphora_object.main(search_text)
                 # relevant_ sentence function is used to find the sentences
                 # having highest density of keywords, it returns sentences
                 # having maximum keywords in them

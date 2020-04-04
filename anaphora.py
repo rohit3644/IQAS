@@ -7,7 +7,7 @@ class Anaphora:
         pass
 
     def resolve(self, corenlp_output, text):
-        """ Transfer the word form of the antecedent to its associated pronominal anaphor(s) """
+        # Transfer the word form of the antecedent to its associated pronominal anaphor(s)
         try:
             for coref in corenlp_output['corefs']:
                 mentions = corenlp_output['corefs'][coref]
@@ -26,7 +26,7 @@ class Anaphora:
             return text
 
     def print_resolved(self, corenlp_output, text):
-        """ Print the "resolved" output """
+        # Print the "resolved" output
         try:
             output_sentence = ""
             possessives = ['hers', 'his', 'their', 'theirs']

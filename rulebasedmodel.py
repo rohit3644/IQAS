@@ -96,7 +96,7 @@ class RuleBasedModel:
         # so no need to store such answers in database
         # Eg-: What is the petrol price today in Bhubaneswar?
         if "Today" in query or "Yesterday" in query or "Price" in query:
-            print(answer)
+            print("Answer: ", answer)
         else:
 
             # Importing Database class
