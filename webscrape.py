@@ -189,10 +189,33 @@ class WebScraping:
 
     # Get a list of relevant text documents for the input query
 
-    def fetch_text_results(self, query):
+    def fetch_text_results(self, url):
         text_results = []
         links = []
         wiki_links, other_sites = [], []
+        # URL list generation and bifurcation
+        # Split the URLs into Wiki links and site links
+        if "gstatic.com" not in url:  # Exclude static google content
+            target = wiki_links if "en.wikipedia.org" in url else other_sites
+            target.append(url)
+            links.append(url)
+            # Fetching Wiki pages
+            wiki_pages = self.get_all_wikis(wiki_links)
+            if wiki_pages:
+                text_results += wiki_pages  # Merge wikis with text results
+            # Fetching site HTMLs and extracting text
+            site_pages = self.download_all_sites(
+                other_sites)  # Get HTML from site URLs
+            if site_pages:  # Emptiness check
+                page_texts = self.extract_text(
+                    site_pages)  # Extract texts from HTML
+                if page_texts:  # Emptiness check
+                    text_results += page_texts  # Merge site texts with text results
+        return (text_results, links)
+
+    def process(self, query):
+        import multiprocessing
+
         sites1 = set()
         # Search Google
         sites = self.google_search(
@@ -204,23 +227,11 @@ class WebScraping:
                 sites1.add(i[:found])
             else:
                 sites1.add(i)
-        # URL list generation and bifurcation
-        for url in sites1:  # Split the URLs into Wiki links and site links
-            if "gstatic.com" in url:  # Exclude static google content
-                continue
-            target = wiki_links if "en.wikipedia.org" in url else other_sites
-            target.append(url)
-            links.append(url)
-        # Fetching Wiki pages
-        wiki_pages = self.get_all_wikis(wiki_links)
-        if wiki_pages:
-            text_results += wiki_pages  # Merge wikis with text results
-        # Fetching site HTMLs and extracting text
-        site_pages = self.download_all_sites(
-            other_sites)  # Get HTML from site URLs
-        if site_pages:  # Emptiness check
-            page_texts = self.extract_text(
-                site_pages)  # Extract texts from HTML
-            if page_texts:  # Emptiness check
-                text_results += page_texts  # Merge site texts with text results
-        return (text_results, links)
+
+        results = []
+        links = []
+        processPool = multiprocessing.Pool(3)
+        for result, link in processPool.map(self.fetch_text_results, sites1):
+            results += result
+            links += link
+        return results, links

@@ -1,6 +1,5 @@
 from __future__ import unicode_literals, print_function
 
-
 # Main class contains a constructor and main function
 # main function is used to take user query input,
 # Get the web-scraped dynamic content, detect the
@@ -56,7 +55,7 @@ class Main:
         else:
             # text_list is a list of text from different websites
             # links is a list of website links
-            text_list, links = web_scrape_object.fetch_text_results(
+            text_list, links = web_scrape_object.process(
                 original_query)
 
             # if text_list is empty
@@ -80,16 +79,14 @@ class Main:
                 weather_object.weather(weather_location)
             else:
                 search_text = ""
-                for i in text_list:
-                    # searching text function is used to search
-                    # relevant sentences in the entire content
-                    # and returns only relevant sentence from the
-                    # entire content
-                    text = search_text_object.searching_text(
-                        query, i, query_ner, ques_tag, list_ques_tag)
-                    # check for duplication of search text
-                    if(text not in search_text):
-                        search_text += text
+
+                final_content = " ".join(text_list)
+                # searching text function is used to search
+                # relevant sentences in the entire content
+                # and returns only relevant sentence from the
+                # entire content
+                search_text = search_text_object.searching_text(
+                    query, final_content, query_ner, ques_tag, list_ques_tag)
 
                 # relevant_ sentence function is used to find the sentences
                 # having highest density of keywords, it returns sentences
