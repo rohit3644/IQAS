@@ -213,13 +213,18 @@ class WebScraping:
                     text_results += page_texts  # Merge site texts with text results
         return (text_results, links)
 
+    # this functiom uses google search function
+    # to get top urls and also encorporates
+    # multiprocessing for scraping the urls
     def process(self, query):
         import multiprocessing
-
+        # Set is used to keep only unique urls
         sites1 = set()
         # Search Google
         sites = self.google_search(
             query, num_results=3)  # Obtain the top 3 URLs
+        # removing duplicate links
+        # from list of urls
         for i in sites:
             found = -100
             found = i.find('?')
@@ -230,6 +235,7 @@ class WebScraping:
 
         results = []
         links = []
+        # multiprocessing
         processPool = multiprocessing.Pool(3)
         for result, link in processPool.map(self.fetch_text_results, sites1):
             results += result
