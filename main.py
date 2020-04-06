@@ -26,6 +26,7 @@ class Main:
         # importing the third- party libraries
         import spacy
         import en_core_web_lg
+        import time
         nlp = en_core_web_lg.load()
         # objects
         web_scrape_object = WebScraping()
@@ -37,6 +38,7 @@ class Main:
         # user query
         original_query = input("Ask me a Question: ")
 
+        start = time.time()
         # question tag function is used to find the question-tag
         # in the user query and it returns question-tag and list of
         # all possible question tags
@@ -100,7 +102,7 @@ class Main:
                 # Rule based model is used to find answer within the search text
                 # it is also used to display the answer
                 rule_based_object.rule_based_model(ques_tag, query_ner, search_text_ner,
-                                                   search_text, list_ques_tag, links, query)
+                                                   search_text, list_ques_tag, links, query, start)
 
 
 if __name__ == "__main__":

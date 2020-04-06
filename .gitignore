@@ -1,6 +1,7 @@
 # ignoring the api key
 apikey.py
 dbcredentials.py
+rules.py
 .vscode/
 __pycache__/
 stanford-corenlp-full-2018-10-05/

@@ -15,19 +15,6 @@ class SearchText:
     def __init__(self):
         pass
 
-    # this function is used to search all the relevant sentence
-    # atleast a keyword in query
-    def search_all_keyword(self, length, query_array, list_file_content, l, universal):
-        for i in range(length):
-            for k in query_array:
-                x = k.lower()
-                y = ps.stem(k)
-                if((k in list_file_content[i]) or (x in list_file_content[i]) or (y in list_file_content[i]) or
-                        (y.capitalize() in list_file_content[i])) and i not in l and list_file_content[i] not in universal:
-                    l.append(i)
-                    universal += list_file_content[i] + " "
-        return universal
-
     # user-defined searching_text function
     # used to search relevant text based on user query
     # returns a string of relevant sentences
@@ -37,85 +24,111 @@ class SearchText:
         import en_core_web_lg
         from nltk.corpus import stopwords
         from nltk.tokenize import word_tokenize
+        from rules import wh_dictionary, how_dictionary
         nlp = en_core_web_lg.load()
 
         # Anaphora/Reference resolution
         from anaphora import Anaphora
         anaphora_object = Anaphora()
         file_content = anaphora_object.main(file_content)
+
         # Splitting the file content into sentences
         list_file_content = self.sentence_split(file_content)
-        length = len(list_file_content)
         query_array = query.split()
-        l = []
+
         # final string of relevant sentences
         universal = ""
+
         # For who question type
         if ((ques_tag == 'who' or ques_tag == 'Who' or ques_tag == 'whom' or ques_tag == 'Whom')):
-            relevant_string = ""
-            relevant_string = self.search_all_keyword(
-                length, query_array, list_file_content, l, relevant_string)
 
-            relevant_string_array = self.sentence_split(relevant_string)
-
-            for i in relevant_string_array:
+            for i in list_file_content:
                 x = nlp(i)
                 for j in x.ents:
-                    # getting the sentences containing date or ordinal
+                    # getting the sentences containing PERSON tag
                     if(j.label_ == 'PERSON'):
                         universal += i
                         break
 
-            if universal == "":
-                universal = relevant_string
-
         # For when question tags
         elif ((ques_tag == 'when' or ques_tag == 'When')):
-            relevant_string = ""
-            relevant_string = self.search_all_keyword(
-                length, query_array, list_file_content, l, relevant_string)
 
-            relevant_string_array = self.sentence_split(relevant_string)
-
-            for i in relevant_string_array:
+            for i in list_file_content:
                 x = nlp(i)
                 for j in x.ents:
-                    # getting the sentences containing date or ordinal
+                    # getting the sentences containing DATE tag
                     if(j.label_ == 'DATE'):
                         universal += i
                         break
 
-            if universal == "":
-                universal = relevant_string
-
         # For where type of questions
         elif(ques_tag == 'where' or ques_tag == 'Where'):
-            relevant_string = ""
-            relevant_string = self.search_all_keyword(
-                length, query_array, list_file_content, l, relevant_string)
 
-            relevant_string_array = self.sentence_split(relevant_string)
-
-            # getting the sentences containing GPE
-            for i in relevant_string_array:
+            # getting the sentences containing GPE tag
+            for i in list_file_content:
                 x = nlp(i)
                 for j in x.ents:
-                    if(j.label_ == 'GPE'):
+                    if(j.label_ == 'GPE'or j.label_ == 'LOC'):
                         universal += i
                         break
-            if universal == "":
-                universal = relevant_string
 
         # For which and what type of question
         elif(ques_tag == 'which' or ques_tag == 'Which' or ques_tag == 'What' or ques_tag == 'what'):
-            universal = self.search_all_keyword(
-                length, query_array, list_file_content, l, universal)
+
+            search_tag = set()
+            # Getting tags related to keywords using some hand-written rules
+            for keyword in query_array:
+                if keyword in wh_dictionary and keyword in ["Team", "Place"]:
+                    value_array = wh_dictionary[keyword].split(",")
+                    search_tag.update(value_array)
+                elif keyword in wh_dictionary:
+                    search_tag.add(wh_dictionary[keyword])
+
+            # getting the sentences containing the tags
+            for string in list_file_content:
+                string_ner = nlp(string)
+                for tag in string_ner.ents:
+                    if tag in search_tag:
+                        universal += i
+                        break
 
         # For how and default case
-        elif(ques_tag == 'how' or ques_tag == "How" or ques_tag not in list_ques_tag):
-            universal = self.search_all_keyword(
-                length, query_array, list_file_content, l, universal)
+        elif(ques_tag == 'how' or ques_tag == "How"):
+            search_tag = set()
+            # Getting tags related to keywords using some hand-written rules
+            for keyword in query_array:
+                if keyword in how_dictionary:
+                    search_tag.add(how_dictionary[keyword])
 
+            # getting the sentences containing the tags
+            for string in list_file_content:
+                string_ner = nlp(string)
+                for tag in string_ner.ents:
+                    if tag in search_tag:
+                        universal += i
+                        break
+
+        # Default case
+        elif(ques_tag not in list_ques_tag):
+            search_tag = set()
+            # Getting tags related to keywords using some hand-written rules
+            for keyword in query_array:
+                if keyword in wh_dictionary and keyword in ["Team", "Place"]:
+                    value_array = wh_dictionary[keyword].split(",")
+                    search_tag.update(value_array)
+                elif keyword in wh_dictionary:
+                    search_tag.add(wh_dictionary[keyword])
+
+            # getting the sentences containing the tags
+            for string in list_file_content:
+                string_ner = nlp(string)
+                for tag in string_ner.ents:
+                    if tag in search_tag:
+                        universal += i
+                        break
+
+        if universal == "":
+            universal = file_content
         return universal
 
     # user-defined sentence_split function
@@ -139,7 +152,8 @@ class SearchText:
         for i in range(length):
             count = 0
             for j in keywords_array:
-                if(j.lower() in string_array[i] or j in string_array[i] or j.upper() in string_array[i] or ps.stem(j) in string_array[i]):
+                if(j.lower() in string_array[i] or j in string_array[i] or j.upper() in string_array[i]
+                   or ps.stem(j) in string_array[i] or ps.stem(j).capitalize() in string_array[i]):
                     count += 1
             # insert index and count of keywords in each sentence
             dic.__setitem__(i, count)

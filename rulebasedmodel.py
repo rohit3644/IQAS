@@ -9,7 +9,7 @@ class RuleBasedModel:
         pass
 
     # user-defined rule_based_model function
-    def rule_based_model(self, ques_tag, query_ner, search_text_ner, search_text, list_ques_tag, links, query):
+    def rule_based_model(self, ques_tag, query_ner, search_text_ner, search_text, list_ques_tag, links, query, start):
         # list to store final answer
         answer_array = []
         answer = ""
@@ -60,7 +60,7 @@ class RuleBasedModel:
                     # GPE present in query is not same as that present
                     # in the search_text sentence and sentence is not present
                     # in answer_array
-                    if(i.label_ == 'GPE' and i.text != j.text and i.text not in answer_array):
+                    if(i.label_ == 'GPE' or i.label_ == 'LOC' and i.text != j.text and i.text not in answer_array):
                         answer_array.append(i.text)
             # if there is only a single
             # GPE in sentence
@@ -87,11 +87,11 @@ class RuleBasedModel:
         for i in links:
             answer += "\n"+i
         # calling the database caching function
-        self.database_caching(answer, query)
+        self.database_caching(answer, query, start)
 
     # this function is used to store the relevant answer
     # in database according to the user feedback
-    def database_caching(self, answer, query):
+    def database_caching(self, answer, query, start):
         # Answers of such query change frequently
         # so no need to store such answers in database
         # Eg-: What is the petrol price today in Bhubaneswar?
@@ -105,6 +105,9 @@ class RuleBasedModel:
             feedback = ""
             # Final Answer(including links)
             print("Answer:", answer)
+            import time
+            end = time.time()
+            print("Execution in:", end-start)
             print("\n\nAre you satisfied with the answer?\n ")
             response = input("Press Y fo Yes and N for No:")
             if response in ['Yes', 'yes', 'y', 'Y']:
