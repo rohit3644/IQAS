@@ -1,14 +1,14 @@
 # importing third-party libraries
 
-import datetime
-import spacy
-import requests
-import urllib.request
-import json
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from bs4 import BeautifulSoup
-from bs4.element import Comment
 import urllib.parse as urlparse
+from bs4.element import Comment
+from bs4 import BeautifulSoup
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import json
+import urllib.request
+import requests
+import spacy
+import datetime
 
 # Disable displaying SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -20,8 +20,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 # filterTags function, text_from_html function, extract_text function
 # and fetch_text_result function
 class WebScraping:
-    def __init__(self):
-        pass
+    def __init__(self, query_array):
+        self.query_array = query_array
 
     # Utility function to pick a random user-agent
     def get_random_ua(self):
@@ -148,6 +148,7 @@ class WebScraping:
         return site_contents
 
     def filterTags(self, element, res):
+
         blacklist = ['style', 'label', '[document]', 'embed', 'img', 'object',
                      'noscript', 'header', 'iframe', 'audio', 'picture',
                      'meta', 'title', 'aside', 'footer', 'svg', 'base', 'figure',
@@ -171,10 +172,29 @@ class WebScraping:
             self.filterTags(child, res)
 
     def text_from_html(self, htmlContent, res):
+        import nltk
+        from nltk.stem import PorterStemmer
+        ps = PorterStemmer()
+
         soup = BeautifulSoup(htmlContent, 'html.parser')
         texts = soup.find()
         self.filterTags(texts, res)
-        return " ".join(t.strip() for t in res)
+
+        # getting only the relevant content
+        # from urls based on query
+        refined_content = []
+        for sentence in res:
+            for keyword in self.query_array:
+                x = keyword.lower()
+                y = keyword.upper()
+                z = ps.stem(keyword)
+                z1 = z.capitalize()
+                z2 = z.upper()
+                if ((x in sentence) or (y in sentence) or (z in sentence)
+                        or (z1 in sentence) or (z2 in sentence)):
+                    refined_content.append(sentence)
+                    break
+        return " ".join(t.strip() for t in refined_content)
 
     # Extract textual content from all pages
 

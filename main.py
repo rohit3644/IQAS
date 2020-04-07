@@ -29,7 +29,6 @@ class Main:
         import time
         nlp = en_core_web_lg.load()
         # objects
-        web_scrape_object = WebScraping()
         text_preprocess_object = TextPreprocessing()
         weather_object = Weather()
         search_text_object = SearchText()
@@ -57,6 +56,7 @@ class Main:
         else:
             # text_list is a list of text from different websites
             # links is a list of website links
+            web_scrape_object = WebScraping(query.split())
             text_list, links = web_scrape_object.process(
                 original_query)
 
