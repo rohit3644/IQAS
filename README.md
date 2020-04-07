@@ -1,8 +1,8 @@
-IQAS(Intelligent Question Answering System)
+# IQAS(Intelligent Question Answering System)
 
 IQAS is rule-based, intelligent question answering system build purely using Natural Language Processing Techniques. It extract answers from top google links. I am currently focused on improving the accuracy of the extracted answer.
 
-MODULES REQUIRED
+### MODULES REQUIRED
 
 1. Spacy
 2. NLTK
@@ -16,7 +16,7 @@ MODULES REQUIRED
 10. Date-Time
 11. String
 
-MODULES INSTALLATION
+### MODULES INSTALLATION
 
 1. pip install spacy
 2. pip install nltk
@@ -27,17 +27,17 @@ MODULES INSTALLATION
 7. pip install google-search
 8. pip install requests
 
-REQUIREMENTS
+### REQUIREMENTS
 
 Python version: 3.6 or above
 
 Stanford-corenlp-full-2018-10-05
 
-DATABASE USED
+### DATABASE USED
 
 MySQL version: 5.7.29
 
-COMMAND TO CREATE TABLE REQUIRED FOR DATABASE CACHING
+### COMMAND TO CREATE TABLE REQUIRED FOR DATABASE CACHING
 
 "create table <TABLE NAME> ( Id int(11) UNSIGNED NOT NULL AUTO_INCREMENT, Value int(11) UNSIGNED NOT NULL, Answer Text, creationTime datetime DEFAULT CURRENT_TIMESTAMP, modificationTime datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,CONSTRAINT `PK_users` PRIMARY KEY (id))ENGINE=InnoDB;"
 
@@ -64,7 +64,7 @@ COMMAND TO CREATE TABLE REQUIRED FOR DATABASE CACHING
 4. This command for table
    ALTER TABLE <TABLE NAME> CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-TO RUN
+### TO RUN
 
 1. Install python 3.6 or above
 2. Install the packages specified above
