@@ -1,6 +1,10 @@
 from pycorenlp import StanfordCoreNLP
 nlp = StanfordCoreNLP('http://localhost:8111')
 
+# This class is used to resolve the references between the sentences
+# Original sentence: Tom is a good boy. He likes playing cricket
+# Resolved sentence: Tom is a good boy. Tom likes playing cricket
+
 
 class Anaphora:
     def __init__(self):
@@ -42,12 +46,14 @@ class Anaphora:
         except TypeError:
             return text
 
+    # Main function
     def main(self, text):
         output = nlp.annotate(text, properties={
             'annotators': 'dcoref', 'outputFormat': 'json', 'ner.useSUTime': 'false'})
 
         self.resolve(output, text)
         output_resolved = self.print_resolved(output, text)
+        # Replacing LRB and RRB with brackets
         try:
             output_resolved = output_resolved.replace("-LRB-", "(")
             output_resolved = output_resolved.replace("-RRB-", ")")

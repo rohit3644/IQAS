@@ -107,6 +107,7 @@ class RuleBasedModel:
             print("Answer:", answer)
             import time
             end = time.time()
+            # Calculating the execution time
             print("Execution in:", end-start)
             print("\n\nAre you satisfied with the answer?\n ")
             response = input("Press Y fo Yes and N for No:")
