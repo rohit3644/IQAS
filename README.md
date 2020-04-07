@@ -31,6 +31,8 @@ REQUIREMENTS
 
 Python version: 3.6 or above
 
+Stanford-corenlp-full-2018-10-05
+
 DATABASE USED
 
 MySQL version: 5.7.29
@@ -66,10 +68,11 @@ TO RUN
 
 1. Install python 3.6 or above
 2. Install the packages specified above
-3. Keep the ua_file.txt in the same directory
-4. Open command prompt
-5. Go to the directory
-6. Type in command prompt "python3 main.py"
-7. Input your question
-8. Wait for the answer
-9. Give feedback
+3. Download stanford-corenlp
+4. Keep the ua_file.txt in the same directory
+5. Open command prompt
+6. Go to the standford-corenlp directory and run the command `java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port [portnumber] -timeout [timeout]`
+7. Open new tab in the command prompt and type in "python3 main.py"
+8. Input your question
+9. Wait for the answer
+10. Give feedback
