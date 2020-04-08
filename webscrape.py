@@ -180,21 +180,27 @@ class WebScraping:
         texts = soup.find()
         self.filterTags(texts, res)
 
-        # getting only the relevant content
-        # from urls based on query
-        refined_content = []
-        for sentence in res:
-            for keyword in self.query_array:
-                x = keyword.lower()
-                y = keyword.upper()
-                z = ps.stem(keyword)
-                z1 = z.capitalize()
-                z2 = z.upper()
-                if ((x in sentence) or (y in sentence) or (z in sentence)
-                        or (z1 in sentence) or (z2 in sentence)):
-                    refined_content.append(sentence)
-                    break
-        return " ".join(t.strip() for t in refined_content)
+        result = []
+        if len(res) > 100:
+            # getting only the relevant content
+            # from urls based on query
+            refined_content = []
+            for sentence in res:
+                for keyword in self.query_array:
+                    x = keyword.lower()
+                    y = keyword.upper()
+                    z = ps.stem(keyword)
+                    z1 = z.capitalize()
+                    z2 = z.upper()
+                    if ((x in sentence) or (y in sentence) or (z in sentence)
+                            or (z1 in sentence) or (z2 in sentence)):
+                        refined_content.append(sentence)
+                        break
+
+            result += refined_content
+        else:
+            result += res
+        return " ".join(t.strip() for t in result)
 
     # Extract textual content from all pages
 
