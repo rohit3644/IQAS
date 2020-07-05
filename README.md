@@ -71,7 +71,7 @@ MySQL version: 5.7.29
 3. Download stanford-corenlp
 4. Keep the ua_file.txt in the same directory
 5. Open command prompt
-6. Go to the standford-corenlp directory and run the command `java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port [portnumber] -timeout [timeout]`
+6. Go to the standford-corenlp directory and run the command `java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 8111 -timeout 1500`
 7. Open new tab in the command prompt and type in "python3 main.py"
 8. Input your question
 9. Wait for the answer
